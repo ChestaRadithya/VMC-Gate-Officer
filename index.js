@@ -1,6 +1,6 @@
 require('dotenv').config();
 const {Client, GatewayIntentBits, REST, Routes} = require('discord.js');
-const verifyCommang = require('./verify.js');
+const verifyCommand = require('./verify.js');
 
 const client = new Client({
     intents: [
