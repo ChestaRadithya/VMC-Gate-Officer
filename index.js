@@ -38,3 +38,11 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(process.env.TOKEN);
+
+// Dummy serer cause this is deployed to Render
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get('/', (req, res) => res.send('Application is Online!'));
+app.listen(port, () => console.log(`Web server listening on port ${port}`))
