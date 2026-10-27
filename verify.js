@@ -1,7 +1,17 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {getCountries} = require('country-list.js');
+const {getName, getCode} = require('country-list.js');
 // Gets and stores all countries in the world, with an option of "Prefer not to say"
-const countries = ["Prefer Not To Say", ...getCountries()];
+const countries = ["Prefer Not To Say", ...getName()];
+
+function getFlagEmoji (countryCode) {
+    if (!countryCode) return '';
+    // Converts the standart letters into Regional Indicatior emojis
+    const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
+}
 
 module.exports = {
     // Discord Command Structure
@@ -14,7 +24,7 @@ module.exports = {
                 .setRequired(true))
         .addStringOption(option =>
             option.setName('nationality')
-                .setDescription('Type here to search for your country, or select "Prefer Not To Say" if you would like to keep it private')
+                .setDescription('Type here to search for your country, or select "Prefer Not To Say".')
                 .setAutocomplete(true)
                 .setRequired(true)),
     
@@ -42,24 +52,32 @@ module.exports = {
         const unverifiedRole = interaction.guild.roles.cache.get(unverifiedRoleId);
 
         try {
-            // Adding the verified role to user
-            if (verifiedRole) {
-                await interaction.member.roles.add(verifiedRole);
-            }
-            // Remove unverified role frome user
-            if (unverifiedRole) {
-                await interaction.member.roles.remove(unverifiedRole);
+            // Adding the verified role to user and removing unverified role from user.
+            if (verifiedRole) await interaction.member.roles.add(verifiedRole);
+            if (unverifiedRole) await interaction.member.roles.remove(unverifiedRole);
+
+            let flag = '';
+            if (nationality !== "Prefer Not To Say") {
+                const countryCode = getCode(nationality);
+                if (countryCode) {
+                    flag = getFlagEmoji(countryCode);
+                }
             }
 
-            // Set User's nickname after verification
             try {
-                await interaction.member.setNickname(`${name} - ${nationality}`);
-            } catch (nicknameError) {
-                console.log(`Could not change nickname for ${interaction.user.tag}`);
+                // Creates new nickname to user with their name and nationality emoji (if revealed by user)
+                const newNickname = flag ? `${name} - ${flag}` : `${name} - 🌍`;
+
+                //Discord limits nicknames on 32 characters. This prevents nicknames going over that limit and crashing the bot.
+                const safeNickname = newNickname.substring(0, 32);
+
+                await interaction.member.setNickname(safeNickname);
+            } catch (error) {
+                console.log(`Could not change nickname for ${interaction.user.tag}`)
             }
 
             await interaction.reply({
-                content: `**✅ You have been verified successfully!**\nWelcome to VMC ${name} from ${nationality}`,
+                content: `**✅ You have been verified successfully!**\nWelcome to VMC **${name}** from **${nationality}** ${flag}`,
                 ephemeral: true
             });
         } catch (error) {
