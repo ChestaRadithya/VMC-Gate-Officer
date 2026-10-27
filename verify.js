@@ -37,8 +37,8 @@ module.exports = {
         const name = interaction.options.getString('name');
         const nationality = interaction.options.getString('nationality');
 
-        const verifiedRoleId = ''
-        const unverifiedRoleId = ''
+        const verifiedRoleId = '1561262488849227786'
+        const unverifiedRoleId = '1561262622215770123'
 
         const verifiedRole = interaction.guild.roles.cache.get(verifiedRoleId);
         const unverifiedRole = interaction.guild.roles.cache.get(unverifiedRoleId);
