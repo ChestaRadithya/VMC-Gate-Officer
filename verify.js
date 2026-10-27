@@ -1,9 +1,7 @@
-const {SlashCommandBuilder} = require('discord.js')
-
-// Stores a full list of all countries in the world, with an option of "Prefer not to say"
-const countries = [
-
-];
+const {SlashCommandBuilder} = require('discord.js');
+const {getCountries} = require('country-list.js');
+// Gets and stores all countries in the world, with an option of "Prefer not to say"
+const countries = ["Prefer Not To Say", ...getCountries()];
 
 module.exports = {
     // Discord Command Structure
