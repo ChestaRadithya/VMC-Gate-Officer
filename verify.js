@@ -1,5 +1,5 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {getName, getCode} = require('country-list.js');
+const {getName, getCode} = require('country-list');
 // Gets and stores all countries in the world, with an option of "Prefer not to say"
 const countries = ["Prefer Not To Say", ...getName()];
 
