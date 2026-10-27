@@ -46,10 +46,16 @@ module.exports = {
             if (verifiedRole) {
                 await interaction.member.roles.add(verifiedRole);
             }
-
             // Remove unverified role frome user
             if (unverifiedRole) {
                 await interaction.member.roles.remove(unverifiedRole);
+            }
+
+            // Set User's nickname after verification
+            try {
+                await interaction.member.setNickname(`${name} - ${nationality}`);
+            } catch (nicknameError) {
+                console.log(`Could not change nickname for ${interaction.user.tag}`);
             }
 
             await interaction.reply({
