@@ -1,7 +1,7 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {getName, getCode} = require('country-list');
+const {getNames, getCode} = require('country-list');
 // Gets and stores all countries in the world, with an option of "Prefer not to say"
-const countries = ["Prefer Not To Say", ...getName()];
+const countries = ["Prefer Not To Say", ...getNames()];
 
 function getFlagEmoji (countryCode) {
     if (!countryCode) return '';
